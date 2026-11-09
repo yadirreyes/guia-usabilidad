@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de Usabilidad Web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f3f0;--card:#fff;--txt:#262a30;--pri:#8f1424;--pri-d:#6e0f1c;--acc:#e0b866;--ink2:#4d555e;--focus:#1a3a6b;--soft:#f4e3e5;--line:#dcd7d2}
+*{box-sizing:border-box}
+html{font-size:106%;scroll-padding-top:var(--topH,110px)}
+.top{position:sticky;top:0;z-index:10}
+.tb{scroll-margin-top:calc(var(--topH,110px) + 8px)}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:"Atkinson Hyperlegible",Verdana,sans-serif;line-height:1.65}
+a{color:var(--pri-d)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.skip{position:absolute;left:-999px;top:0;background:var(--pri-d);color:#fff;padding:.6rem 1rem;z-index:20}
+.skip:focus{left:0}
+header{background:var(--pri);color:#fff;padding:.7rem 1.5rem}
+header h1{margin:0;font-size:1.35rem}
+header p{margin:.1rem 0 0;max-width:70ch;font-size:.95rem}
+#prog{height:6px;background:#4a0a13}
+#bar{height:100%;width:0;background:#f0d5a0;transition:width .4s}
+.wrap{display:flex;gap:1.5rem;max-width:1400px;margin:0 auto;padding:1.5rem 1rem;align-items:flex-start}
+nav{flex:0 0 235px;position:sticky;top:calc(var(--topH,110px) + 1rem);max-height:calc(100vh - var(--topH,110px) - 2rem);overflow-y:auto;padding:.35rem}
+[role=tablist]{display:flex;flex-direction:column;gap:.4rem;margin:0}
+.tb{text-align:left;font:inherit;padding:.75rem .9rem;background:var(--card);color:var(--txt);border:1px solid var(--line);border-left:6px solid transparent;border-radius:8px;cursor:pointer;min-height:48px}
+.tb:hover{background:var(--soft)}
+.tb.sel{background:var(--pri);color:#fff;font-weight:700;border-left-color:var(--acc)}
+.tb.sel::before{content:"▸ "}
+main{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.5rem 1.8rem}
+.panel{display:none}
+.panel.on{display:block;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.badge{display:inline-block;background:var(--soft);color:var(--pri-d);font-weight:700;padding:.15rem .7rem;border-radius:99px;font-size:.9rem}
+h2{margin:.5rem 0 1rem;color:var(--pri-d)}
+h3{color:var(--ink2);margin-top:1.4rem}
+p,li{max-width:70ch}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;padding:0;list-style:none}
+.chips li{background:var(--soft);padding:.3rem .8rem;border-radius:8px}
+.slider{container-type:inline-size;border:2px solid var(--pri);border-radius:12px;padding:1rem 1.2rem;margin:1rem 0;background:#fdfbfb}
+.slide{min-height:7.5rem}
+.slide h4{margin:.2rem 0;color:var(--pri-d);font-size:1.15rem}
+.ctrl{display:flex;align-items:center;gap:.4rem;flex-wrap:nowrap}
+.ctrl .b{padding:.4rem .75rem;font-size:.9rem;min-height:40px;white-space:nowrap}
+button.b{font:inherit;padding:.55rem 1rem;background:var(--pri);color:#fff;border:0;border-radius:8px;cursor:pointer;min-height:44px}
+button.b:hover{background:var(--pri-d)}
+.dots{display:flex;gap:.35rem}
+.dots button{width:20px;height:20px;border-radius:50%;border:2px solid #5d6670;background:#fff;cursor:pointer;padding:0}
+.dots button[aria-current=true]{background:#3d4650;border-color:#3d4650}
+.box{border:2px solid var(--pri);border-radius:12px;padding:1rem 1.2rem;margin:1rem 0;background:#fdfbfb}
+.facets{display:flex;flex-wrap:wrap;gap:.35rem}
+.facet{font:inherit;background:#fff;color:var(--pri-d);border:2px solid var(--pri);border-radius:8px;padding:.35rem .6rem;font-size:.9rem;white-space:nowrap;cursor:pointer;min-height:40px}
+.facet:hover{background:var(--soft)}
+.facet[aria-pressed=true]{background:var(--pri);color:#fff;font-weight:700}
+.facet[aria-pressed=true]::before{content:"✓ "}
+.finfo{margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--line);min-height:5rem}
+.finfo strong{color:var(--pri-d);font-size:1.1rem}
+.finfo p{margin:.3rem 0 0}
+.pr{flex:1 1 140px;text-align:center}
+.facet.pr[aria-pressed=true]::before{content:none}
+.finfo .hint{color:#55626b;margin:.3rem 0 0}
+details{border:1px solid var(--line);border-radius:8px;margin:.6rem 0;padding:.2rem 1rem}
+summary{cursor:pointer;font-weight:700;padding:.6rem 0;color:var(--pri-d)}
+table{border-collapse:collapse;width:100%;max-width:640px}
+td,th{border:1px solid var(--line);padding:.5rem;text-align:left}
+th{background:var(--soft)}
+.pager{display:flex;justify-content:space-between;margin-top:2rem;gap:1rem}
+.pager .b[disabled]{visibility:hidden}
+footer{text-align:center;padding:1rem;font-size:.75rem;color:#5d6670}
+#menuBtn{display:none}
+@media(max-width:800px){
+ .wrap{flex-direction:column;padding:0 1rem 1rem;align-items:stretch;gap:0}
+ nav{flex:none;position:sticky;top:var(--topH,110px);z-index:9;max-height:none;overflow:visible;padding:.5rem 0;background:var(--bg)}
+ #menuBtn{display:flex;justify-content:space-between;align-items:center;gap:.5rem;width:100%;font:inherit;font-weight:700;padding:.65rem .9rem;background:var(--pri-d);color:#fff;border:0;border-radius:8px;cursor:pointer;min-height:44px;text-align:left}
+ [role=tablist]{display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg);padding:.5rem;border-radius:0 0 10px 10px;box-shadow:0 10px 18px rgba(0,0,0,.25);max-height:calc(100vh - var(--topH,110px) - 80px);overflow-y:auto}
+ nav.open [role=tablist]{display:flex}
+ main{padding:1.1rem}
+ header{padding:.5rem 1rem}
+ header h1{font-size:1.15rem}
+ header p{font-size:.8rem}
+}
+.slide.an{animation:sn .45s ease}
+.slide.ap{animation:sp .45s ease}
+@keyframes sn{from{opacity:0;transform:translateX(50px)}to{opacity:1;transform:none}}
+@keyframes sp{from{opacity:0;transform:translateX(-50px)}to{opacity:1;transform:none}}
+.tb{transition:background .2s,transform .2s}
+.tb:hover{transform:translateX(5px)}
+details{transition:background .2s}
+details[open]{background:#fdfbfb}
+@container (max-width:500px){.ctrl .t{display:none}.ctrl .b{padding:.4rem .7rem}}
+@container (max-width:300px){.ctrl{flex-wrap:wrap;justify-content:center}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<div class="top">
+<header>
+ <h1>Guía de Usabilidad Web</h1>
+ <p>Siete temas para entender cómo lograr que un producto digital sea fácil de usar para todas las personas.</p>
+</header>
+<div id="prog" role="progressbar" aria-label="Avance del recorrido" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1"><div id="bar"></div></div>
+</div>
+
+<div class="wrap">
+<nav aria-label="Temas">
+ <button id="menuBtn" aria-expanded="false" aria-controls="tabs"><span id="mcur">1. Nociones básicas</span><span aria-hidden="true">▾</span></button>
+ <div id="tabs" role="tablist" aria-orientation="vertical" aria-label="Temas de la guía"></div>
+</nav>
+
+<main id="contenido" tabindex="-1">
+
+<section class="panel" id="p-nociones" role="tabpanel" aria-labelledby="t-nociones">
+ <span class="badge">Tema 1 de 7</span>
+ <h2>Usabilidad: nociones básicas para profesionales de la información</h2>
+ <p>Jakob Nielsen, considerado el padre de la usabilidad, la define como el atributo de calidad que indica qué tan fácil es usar un producto: el grado en que una persona puede aprovechar su utilidad sin esfuerzo innecesario.</p>
+ <h3>Las 5 características de la usabilidad</h3>
+  <div class="slider" role="group" aria-roledescription="carrusel" aria-label="Características de la usabilidad">
+  <div class="slide" id="slide" aria-live="off"><p class="badge">1 de 5</p><h4>Facilidad de aprendizaje</h4><p>Cuánto tarda alguien que nunca vio la interfaz en aprender a usarla y hacer las operaciones básicas.</p></div>
+  <div class="ctrl">
+   <button class="b" id="sPrev" aria-label="Anterior">←<span class="t"> Anterior</span></button>
+   <div class="dots" id="dots"></div>
+   <button class="b" id="sNext" aria-label="Siguiente"><span class="t">Siguiente </span>→</button>
+   <button class="b" id="sPlay" aria-label="Pausar">⏸<span class="t"> Pausar</span></button>
+  </div>
+ </div>
+ <h3>De la usabilidad a la experiencia de usuario</h3>
+ <p>La usabilidad es una parte de algo más amplio: la experiencia de usuario. Peter Morville la describe con siete facetas. Toca cada una para ver qué significa.</p>
+ <div class="box" role="group" aria-label="Facetas de la experiencia de usuario">
+  <div class="facets"><button class="facet" aria-pressed="true">Útil</button><button class="facet" aria-pressed="false">Usable</button><button class="facet" aria-pressed="false">Deseable</button><button class="facet" aria-pressed="false">Ubicable</button><button class="facet" aria-pressed="false">Accesible</button><button class="facet" aria-pressed="false">Creíble</button><button class="facet" aria-pressed="false">Valioso</button></div>
+  <div class="finfo" id="finfo" aria-live="polite"><strong>Útil</strong><p>Cada elemento debe tener una función. No se conservan cosas solo porque sean bonitas o llenen espacio.</p></div>
+ </div>
+</section>
+
+<section class="panel" id="p-accesibilidad" role="tabpanel" aria-labelledby="t-accesibilidad">
+ <span class="badge">Tema 2 de 7</span>
+ <h2>Usabilidad y accesibilidad</h2>
+ <p>La <strong>usabilidad</strong> busca que un producto sea fácil, eficiente y agradable de usar. La <strong>accesibilidad</strong> busca que pueda usarlo el mayor número de personas posible, sin importar sus capacidades, su contexto o el dispositivo que empleen. Se complementan: un sitio accesible suele ser más usable para todos.</p>
+ <p>El grupo WAI del W3C publicó en 1999 las primeras pautas WCAG, hoy una referencia internacional. Se organizan en cuatro principios. Pasa el cursor o toca cada uno para ver qué significa:</p>
+ <div class="box" id="pour" role="group" aria-label="Principios de las pautas WCAG">
+  <div class="facets"><button class="facet pr" aria-pressed="false" aria-controls="pinfo">Perceptible</button><button class="facet pr" aria-pressed="false" aria-controls="pinfo">Operable</button><button class="facet pr" aria-pressed="false" aria-controls="pinfo">Comprensible</button><button class="facet pr" aria-pressed="false" aria-controls="pinfo">Robusto</button></div>
+  <div class="finfo" id="pinfo" aria-live="polite"><p class="hint">Pasa el cursor por encima o toca un principio para ver su explicación.</p></div>
+ </div>
+ <h3>Prácticas rápidas para crear un sitio accesible</h3>
+ <ul>
+  <li>Describir las imágenes con el atributo <code>alt</code>.</li>
+  <li>Usar tamaños de letra relativos para que cada persona los ajuste.</li>
+  <li>Evitar texto gris claro sobre fondo blanco.</li>
+  <li>Ofrecer migas de pan, mapa del sitio y URL claras para orientarse.</li>
+ </ul>
+</section>
+
+<section class="panel" id="p-ingenieria" role="tabpanel" aria-labelledby="t-ingenieria">
+ <span class="badge">Tema 3 de 7</span>
+ <h2>Ingeniería de usabilidad</h2>
+ <p>La ingeniería de usabilidad, popularizada por Nielsen en 1993, es el conjunto de actividades que se integran a lo largo del desarrollo para asegurar que el producto sea usable, en lugar de revisar la usabilidad solo al final.</p>
+ <h3>Ideas clave</h3>
+ <ul>
+  <li><strong>Objetivos medibles:</strong> se definen metas concretas, por ejemplo «el 90 % de los usuarios completa la tarea sin ayuda».</li>
+  <li><strong>Usuarios reales:</strong> se conoce a quienes usarán el sistema y se prueba con ellos.</li>
+  <li><strong>Medición:</strong> eficacia, eficiencia y satisfacción, las tres dimensiones de la norma ISO 9241-11.</li>
+  <li><strong>Iteración:</strong> se diseña, se evalúa y se corrige varias veces. Corregir temprano cuesta mucho menos.</li>
+ </ul>
+ <p>Participan perfiles como ingenieros de software, diseñadores de interacción, investigadores de usuarios y especialistas en accesibilidad.</p>
+</section>
+
+<section class="panel" id="p-ciclo" role="tabpanel" aria-labelledby="t-ciclo">
+ <span class="badge">Tema 4 de 7</span>
+ <h2>Ciclo de vida de la ingeniería de usabilidad</h2>
+ <p>Nielsen describe un ciclo con las siguientes etapas, que se repiten y se ajustan según el proyecto:</p>
+ <ol>
+  <li>Conocer a los usuarios.</li>
+  <li>Analizar la competencia.</li>
+  <li>Fijar objetivos de usabilidad.</li>
+  <li>Diseñar en paralelo varias alternativas.</li>
+  <li>Diseño participativo con usuarios.</li>
+  <li>Diseñar de forma coordinada toda la interfaz.</li>
+  <li>Aplicar guías y evaluación heurística.</li>
+  <li>Construir prototipos.</li>
+  <li>Hacer pruebas empíricas con usuarios.</li>
+  <li>Iterar el diseño.</li>
+  <li>Recoger comentarios del uso real.</li>
+ </ol>
+ <h3>Otra mirada: el ciclo de Mayhew (1999)</h3>
+ <p>Deborah Mayhew lo organiza en tres fases: <strong>análisis de requisitos</strong>, <strong>diseño, pruebas y desarrollo</strong>, e <strong>instalación</strong> con retroalimentación.</p>
+</section>
+
+<section class="panel" id="p-metodos" role="tabpanel" aria-labelledby="t-metodos">
+ <span class="badge">Tema 5 de 7</span>
+ <h2>Métodos de evaluación de usabilidad</h2>
+ <p>Un método de evaluación es un procedimiento sistemático para recoger datos sobre la interacción entre las personas y un sistema. Se agrupan en tres familias; abre cada una:</p>
+ <details open><summary>Inspección (la hacen expertos)</summary>
+  <ul><li><strong>Evaluación heurística:</strong> revisar la interfaz con principios reconocidos, como las 10 heurísticas de Nielsen.</li>
+  <li><strong>Recorrido cognitivo:</strong> los evaluadores simulan ser el usuario en tareas concretas.</li>
+  <li><strong>Inspección de características y de estándares.</strong></li></ul></details>
+ <details><summary>Indagación (se conversa y se observa al usuario)</summary>
+  <ul><li>Observación de campo, entrevistas, cuestionarios, grupos focales (6 a 9 personas) y registro del uso.</li></ul></details>
+ <details><summary>Test (usuarios realizan tareas)</summary>
+  <ul><li>Medida de prestaciones, pensar en voz alta, seguimiento ocular (eye-tracking) y ordenación de tarjetas (card sorting).</li></ul></details>
+ <h3>¿Qué se mide?</h3>
+ <table>
+  <tr><th>Dimensión</th><th>Pregunta</th><th>Ejemplo</th></tr>
+  <tr><td>Eficacia</td><td>¿Logró la tarea?</td><td>% de tareas completadas</td></tr>
+  <tr><td>Eficiencia</td><td>¿Con cuánto esfuerzo?</td><td>Pasos, clics o tiempo</td></tr>
+  <tr><td>Satisfacción</td><td>¿Cómo se sintió?</td><td>NPS (0 a 10) y CES (qué tan fácil fue)</td></tr>
+ </table>
+</section>
+
+<section class="panel" id="p-dcu" role="tabpanel" aria-labelledby="t-dcu">
+ <span class="badge">Tema 6 de 7</span>
+ <h2>Diseño web centrado en el usuario</h2>
+ <p>El diseño centrado en el usuario (DCU) es un enfoque multidisciplinar que parte de las necesidades, características y objetivos de las personas, no de lo que la tecnología permite ni del gusto de los diseñadores. Los productos deberían hablar el idioma de sus usuarios.</p>
+ <p>La familia de normas ISO 9241 define el concepto y su alcance, aunque no impone métodos concretos. Es un proceso iterativo con estas fases:</p>
+ <ol>
+  <li><strong>Planificar</strong> el proceso.</li>
+  <li><strong>Especificar el contexto de uso:</strong> quiénes usan el producto y en qué situación.</li>
+  <li><strong>Especificar requisitos</strong> de usuarios y de negocio.</li>
+  <li><strong>Producir soluciones de diseño</strong> y prototipos.</li>
+  <li><strong>Evaluar</strong> con usuarios y volver a la fase que haga falta.</li>
+ </ol>
+ <p>Se evalúa desde el comienzo, porque es más barato reconducir un diseño que rehacer un sitio terminado.</p>
+</section>
+
+<section class="panel" id="p-referencias" role="tabpanel" aria-labelledby="t-referencias">
+ <span class="badge">Tema 7 de 7</span>
+ <h2>Referencias bibliográficas</h2>
+ <ul>
+  <li>Nielsen, J. (1993). <em>Usability Engineering</em>. Academic Press.</li>
+  <li>Mayhew, D. J. (1999). <em>The Usability Engineering Lifecycle</em>. Morgan Kaufmann.</li>
+  <li>Morville, P. (2004). User Experience Honeycomb. Semantic Studios.</li>
+  <li>ISO 9241-11. <em>Ergonomics of human-system interaction: Usability, definitions and concepts</em>.</li>
+  <li>W3C. <em>Web Content Accessibility Guidelines (WCAG)</em>. https://www.w3.org/WAI/standards-guidelines/wcag/</li>
+  <li>Cruz Bueno, H. (2023). <em>Módulo 2: Arquitectura de Información y Usabilidad</em>. Universidad Manuela Beltrán.</li>
+  <li>Massa, S. (2012). <em>Métodos de evaluación de usabilidad: una propuesta de aplicación en objetos de aprendizaje</em>.</li>
+  <li>Casado, E. (2015). <em>Diseño centrado en el usuario: conceptos básicos</em>. UOC.</li>
+  <li>Maciá, F. (2018). <em>¿Qué es la accesibilidad web? Cómo cumplir con las directrices WCAG</em>. Humanlevel.</li>
+ </ul>
+</section>
+
+</main>
+</div>
+<footer>Arquitectura de Información y Usabilidad · Yadir Reyes</footer>
+
+<script>
+const PR={"Perceptible": "La información debe poder percibirse: textos alternativos para las imágenes, subtítulos en los videos y buen contraste.", "Operable": "Todo debe poder manejarse con el teclado, dar tiempo suficiente para leer y usar el contenido, y evitar destellos peligrosos.", "Comprensible": "El contenido debe ser legible y el sitio predecible. Además, debe ayudar a evitar y corregir errores.", "Robusto": "Debe ser compatible con los navegadores y las tecnologías de apoyo actuales y futuras."};
+const pr=[...document.querySelectorAll('.pr')],pi=document.getElementById('pinfo'),pour=document.getElementById('pour');
+const HINT='<p class="hint">Pasa el cursor por encima o toca un principio para ver su explicación.</p>';
+let pm="";
+function pOpen(b){pr.forEach(x=>x.setAttribute('aria-pressed',x==b));pi.innerHTML=b?'<strong>'+b.textContent+'</strong><p>'+PR[b.textContent]+'</p>':HINT}
+pr.forEach(b=>{
+ b.addEventListener('pointerenter',e=>{pm=e.pointerType;if(e.pointerType==='mouse')pOpen(b)});
+ b.addEventListener('pointerdown',e=>{pm=e.pointerType});
+ b.addEventListener('click',()=>{if(pm==='mouse')pOpen(b);else pOpen(b.getAttribute('aria-pressed')==='true'?null:b)});
+});
+pour.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')pOpen(null)});
+pour.addEventListener('focusin',e=>{if(e.target.matches(':focus-visible'))pOpen(e.target)});
+pour.addEventListener('focusout',e=>{if(!pour.contains(e.relatedTarget))pOpen(null)});
+document.addEventListener('click',e=>{if(!pour.contains(e.target))pOpen(null)});
+const topEl=document.querySelector('.top');
+function setTop(){document.documentElement.style.setProperty('--topH',topEl.offsetHeight+'px')}
+setTop();addEventListener('resize',setTop);addEventListener('load',setTop);
+const F={"Útil": "Cada elemento debe tener una función. No se conservan cosas solo porque sean bonitas o llenen espacio.", "Usable": "El producto es fácil de usar para cualquier persona; de eso depende que pueda realizar sus acciones con eficiencia.", "Deseable": "La imagen, la identidad y el diseño evocan emociones. Un diseño atractivo y amigable invita a quedarse.", "Ubicable": "El contenido debe poder encontrarse y recorrerse dentro del sitio. Si no, la persona se frustra y se va.", "Accesible": "Puede usarlo el mayor número posible de personas, sin importar sus limitaciones o el contexto en que lo usen.", "Creíble": "Los usuarios deben confiar en lo que se les dice. Cuando esa confianza se pierde, lo más probable es que no vuelva.", "Valioso": "Debe aportar valor a quien lo usa y contribuir a mejorar su satisfacción."};
+const fb=[...document.querySelectorAll('.facet:not(.pr)')],fi=document.getElementById('finfo');
+fb.forEach(b=>b.onclick=()=>{fb.forEach(x=>x.setAttribute('aria-pressed',x==b));fi.innerHTML='<strong>'+b.textContent+'</strong><p>'+F[b.textContent]+'</p>'});
+const T=[["nociones","1. Nociones básicas"],["accesibilidad","2. Usabilidad y accesibilidad"],["ingenieria","3. Ingeniería de usabilidad"],["ciclo","4. Ciclo de vida"],["metodos","5. Métodos de evaluación"],["dcu","6. Diseño centrado en el usuario"],["referencias","7. Referencias"]];
+const tabs=document.getElementById("tabs"),main=document.getElementById("contenido"),pg=document.getElementById("prog"),mq=matchMedia("(max-width:800px)");
+let cur=0;
+const ps=T.map(t=>document.getElementById("p-"+t[0]));
+const tb=T.map((t,i)=>{const b=document.createElement("button");b.className="tb";b.id="t-"+t[0];b.setAttribute("role","tab");b.setAttribute("aria-controls","p-"+t[0]);b.textContent=t[1];b.onclick=()=>go(i,true);tabs.appendChild(b);return b});
+ps.forEach((p,i)=>{const d=document.createElement("div");d.className="pager";d.innerHTML='<button class="b">← Anterior</button><button class="b">Siguiente →</button>';const[a,n]=d.children;a.onclick=()=>{go(i-1,true);ps[cur].focus({preventScroll:true})};n.onclick=()=>{go(i+1,true);ps[cur].focus({preventScroll:true})};if(i==0)a.style.visibility="hidden";if(i==T.length-1)n.style.visibility="hidden";p.appendChild(d);p.tabIndex=-1});
+const nav=document.querySelector("nav"),mb=document.getElementById("menuBtn");
+function closeMenu(){nav.classList.remove("open");mb.setAttribute("aria-expanded","false")}
+mb.onclick=()=>{const o=nav.classList.toggle("open");mb.setAttribute("aria-expanded",o);if(o)tb[cur].focus()};
+document.addEventListener("click",e=>{if(!nav.contains(e.target))closeMenu()});
+function mark(){
+ tb.forEach((b,k)=>{b.classList.toggle("sel",k==cur);b.setAttribute("aria-selected",k==cur);b.tabIndex=k==cur?0:-1});
+ ps.forEach((p,k)=>p.classList.toggle("on",k==cur));
+ document.getElementById("mcur").textContent=T[cur][1]}
+function layout(){closeMenu();mark()}
+function go(i,sc){
+ cur=Math.max(0,Math.min(T.length-1,i));mark();
+ document.getElementById("bar").style.width=((cur+1)/T.length*100)+"%";
+ pg.setAttribute("aria-valuenow",cur+1);
+ try{history.replaceState(null,"","#"+T[cur][0])}catch(e){}
+ document.title=T[cur][1]+" · Guía de Usabilidad Web";
+ if(sc){closeMenu();window.scrollTo({top:0})}}
+tabs.addEventListener("keydown",e=>{
+ if(!e.target.classList.contains("tb"))return;
+ if(e.key=="Escape"){closeMenu();mb.focus();return}
+ const k={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];
+ if(k){e.preventDefault();const n=(cur+k+T.length)%T.length;go(n);tb[n].focus()}
+ if(e.key=="Home"){e.preventDefault();go(0);tb[0].focus()}
+ if(e.key=="End"){e.preventDefault();go(T.length-1);tb[T.length-1].focus()}
+});
+document.querySelector(".skip").onclick=e=>{e.preventDefault();ps[cur].focus()};
+function fromHash(){const h=location.hash.slice(1),i=T.findIndex(t=>t[0]==h);go(i<0?0:i)}
+window.addEventListener("hashchange",fromHash);
+mq.addEventListener("change",layout);
+layout();fromHash();
+
+/* Carrusel manual */
+const S=[["Facilidad de aprendizaje","Cuánto tarda alguien que nunca vio la interfaz en aprender a usarla y hacer las operaciones básicas."],["Facilidad y eficiencia de uso","Qué tan rápido se hacen las tareas una vez aprendido el sistema."],["Facilidad de recordar","Si la persona puede volver tras un tiempo y usar el sistema sin empezar de cero."],["Frecuencia y gravedad de errores","Cuántos errores se cometen, qué tan graves son y qué ayuda recibe el usuario para recuperarse."],["Satisfacción subjetiva","Qué tan a gusto queda el usuario después de usar el sistema."]];
+let si=0,playing=!matchMedia("(prefers-reduced-motion:reduce)").matches,timer;
+const sl=document.getElementById("slide"),dots=document.getElementById("dots"),sp=document.getElementById("sPlay");
+S.forEach((_,i)=>{const d=document.createElement("button");d.setAttribute("aria-label","Ir a la característica "+(i+1));d.onclick=()=>{show(i,i>si?1:-1);tick()};dots.appendChild(d)});
+function show(i,dir){si=(i+S.length)%S.length;sl.innerHTML="<p class='badge'>"+(si+1)+" de "+S.length+"</p><h4>"+S[si][0]+"</h4><p>"+S[si][1]+"</p>";sl.classList.remove("an","ap");void sl.offsetWidth;sl.classList.add((dir||1)>0?"an":"ap");[...dots.children].forEach((d,k)=>d.setAttribute("aria-current",k==si))}
+function tick(){clearInterval(timer);if(playing)timer=setInterval(()=>show(si+1,1),6000);sp.innerHTML=playing?'⏸<span class="t"> Pausar</span>':'▶<span class="t"> Reproducir</span>';sp.setAttribute("aria-label",playing?"Pausar":"Reproducir");sl.setAttribute("aria-live",playing?"off":"polite")}
+document.getElementById("sPrev").onclick=()=>{show(si-1,-1);tick()};
+document.getElementById("sNext").onclick=()=>{show(si+1,1);tick()};
+sp.onclick=()=>{playing=!playing;tick()};
+const sd=document.querySelector(".slider");
+sd.addEventListener("keydown",e=>{if(e.key=="ArrowLeft"){show(si-1,-1);tick()}if(e.key=="ArrowRight"){show(si+1,1);tick()}});
+["mouseenter","focusin"].forEach(v=>sd.addEventListener(v,()=>clearInterval(timer)));
+["mouseleave","focusout"].forEach(v=>sd.addEventListener(v,tick));
+show(0);tick();
+</script>
+</body>
+</html>
